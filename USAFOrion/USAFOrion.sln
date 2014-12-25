@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.22310.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "USAFOrion", "USAFOrion.csproj", "{EB317445-7AE9-4D87-8CCA-5621AA640108}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{F95A3B55-8F69-4908-AB8E-8B1F16678ABC}"
+	ProjectSection(SolutionItems) = preProject
+		..\Libraries\TacLib.dll = ..\Libraries\TacLib.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB317445-7AE9-4D87-8CCA-5621AA640108}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB317445-7AE9-4D87-8CCA-5621AA640108}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB317445-7AE9-4D87-8CCA-5621AA640108}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB317445-7AE9-4D87-8CCA-5621AA640108}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
