@@ -90,7 +90,7 @@ namespace USAFOrion
                     if (aMagazine.bombStockpile > 0)
                     {
                         // true = at least one bomb of that type in at least one magazine
-                        this.magazineArray.Add (aMagazine.uid, aMagazine) ;
+                        this.magazineArray.Add (aMagazine.flightID, aMagazine) ;
                         this.hasMagazine[aMagazine.name] = true ;
                     }
                 }
@@ -186,7 +186,7 @@ namespace USAFOrion
                         if (this.dockedMagazineArrays.Count <= this.dockedShipID)
                             this.dockedMagazineArrays.Add (new Dictionary<uint, OrionMagazine> ()) ;
                         // insert magazine into dockedMagazineArrays
-                        this.dockedMagazineArrays[this.dockedShipID].Add (aMagazine.uid, aMagazine) ;
+                        this.dockedMagazineArrays[this.dockedShipID].Add (aMagazine.flightID, aMagazine) ;
 
                         // FILL dockedHasMagazine
                         // grow dockedHasMagazine if necessary

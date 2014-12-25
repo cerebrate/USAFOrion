@@ -117,7 +117,7 @@ namespace USAFOrion
                     atomicClamp.angularYMotion = ConfigurableJointMotion.Locked ;
                     atomicClamp.angularZMotion = ConfigurableJointMotion.Locked ;
 
-                    Debug.Log (">>> " + this.name + " #" + this.uid + " found " + aPart.name + " #" + aPart.uid +
+                    Debug.Log (">>> " + this.name + " #" + this.flightID + " found " + aPart.name + " #" + aPart.flightID +
                                ", attaching atomic clamp") ;
 
                     this.atomicClampList.Add (atomicClamp) ; // cache atomic clamp for later removal
@@ -132,7 +132,7 @@ namespace USAFOrion
 
             foreach (var atomicClamp in this.atomicClampList)
             {
-                Debug.Log (">>> " + this.name + " #" + this.uid + " destroying atomic clamp") ;
+                Debug.Log (">>> " + this.name + " #" + this.flightID + " destroying atomic clamp") ;
 
                 DestroyImmediate (atomicClamp) ;
             }

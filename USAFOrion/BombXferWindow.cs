@@ -123,7 +123,7 @@ public class BombXferWindow : PartModule
  *  (3) Call Load/Save if you want it to remember its position and size between runs.
  */
 
-internal class XferDialog : Window<XferDialog>
+internal class XferDialog : ModuleWindow<XferDialog>
 {
     private NukeManager aNukeManager ;
     private float lastButtonFireTime ;
@@ -133,11 +133,8 @@ internal class XferDialog : Window<XferDialog>
     private readonly float slowFireDelay = 0.17f ; // 6 per second
 
     public XferDialog (string name, PartModule p)
-        : base (name, p)
+        : base (name, p, 400, 400)
     {
-        // Force default size
-        this.windowPos = new Rect (60, 60, 400, 400) ;
-
         this.aNukeManager = (p.part as OrionPusherPlate).nukeManager ;
         this.currentFireDelay = this.slowFireDelay ;
     }
@@ -306,7 +303,7 @@ internal class XferDialog : Window<XferDialog>
         }
     }
 
-    public override void Load (ConfigNode node)
+    public override ConfigNode Load (ConfigNode node)
     {
         // Load base settings from global
         var configFilename = IOUtils.GetFilePathFor (this.GetType (), "BombXferWindow.cfg", null) ;
@@ -318,9 +315,11 @@ internal class XferDialog : Window<XferDialog>
 
         // Apply settings
         base.Load (node) ;
+
+        return node ;
     }
 
-    public override void Save (ConfigNode node)
+    public override ConfigNode Save (ConfigNode node)
     {
         // Start with fresh node
         var configFilename = IOUtils.GetFilePathFor (this.GetType (), "BombXferWindow.cfg", null) ;
@@ -334,6 +333,8 @@ internal class XferDialog : Window<XferDialog>
 
         // Save Per-Ship settings
         config.CopyTo (node) ;
+
+        return node ;
     }
 
     public void refreshNukeManager ()
