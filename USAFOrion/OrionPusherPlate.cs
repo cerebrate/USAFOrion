@@ -493,7 +493,7 @@ namespace USAFOrion
                 totalVesselMass += current.mass ;
 
             // add heat from bomb detonation to pusher plate
-            this.externalTemperature += this.aNukeRound.bombHeat ;
+            this.skinTemperature += this.aNukeRound.bombHeat ;
 
             // FX: make explosion sound
             this.explosionGroup.Power = this.explosionGroupPower ;
@@ -542,7 +542,7 @@ namespace USAFOrion
                     // do not damage yourself, your ship is immune from your own nukes
                     if (hitPart.vessel.id != this.pusherOwnerGuid)
                     {
-                        hitPart.externalTemperature += this.aNukeRound.bombHeat ; // add heat
+                        hitPart.skinTemperature += this.aNukeRound.bombHeat ; // add heat
                         hitPart.vessel.GoOffRails () ;
                         hit.attachedRigidbody.AddExplosionForce (this.aNukeRound.damageShock,
                                                                  groundZero,
