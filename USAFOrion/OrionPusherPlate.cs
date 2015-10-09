@@ -491,9 +491,9 @@ namespace USAFOrion
             var totalVesselMass = 0f ;
             foreach (var current in this.vessel.parts)
                 totalVesselMass += current.mass ;
-
+            
             // add heat from bomb detonation to pusher plate
-            this.skinTemperature += this.aNukeRound.bombHeat ;
+            this.skinTemperature += this.aNukeRound.bombHeat * ( 0.01 + this.vessel.atmDensity ) ;
 
             // FX: make explosion sound
             this.explosionGroup.Power = this.explosionGroupPower ;
@@ -513,14 +513,16 @@ namespace USAFOrion
             nukeFlashHolder.transform.position = groundZero ;
             nukeFlashHolder.AddComponent<NukeFlash> () ;
 
-//			// FX: start plasma plume particle system
-//			this.plasmaPlume.particleEmitter.emit = true;
-//			this.plasmaPlumeStopTime = Time.time + 0.64f;	// todo replace this with something calculated
-////			this.plasmaPlumeStopTime = Time.time + 0.16f;	// todo replace this with something calculated
-//			Debug.Log(">>> OrionPusherPlate.detonateBomb: plasma plume started at " + Time.time.ToString());
+            //			// FX: start plasma plume particle system
+            //			this.plasmaPlume.particleEmitter.emit = true;
+            //			this.plasmaPlumeStopTime = Time.time + 0.64f;	// todo replace this with something calculated
+            ////			this.plasmaPlumeStopTime = Time.time + 0.16f;	// todo replace this with something calculated
+            //			Debug.Log(">>> OrionPusherPlate.detonateBomb: plasma plume started at " + Time.time.ToString());
 
             // add velocity
-            this.vessel.ChangeWorldVelocity (this.transform.up * (this.aNukeRound.bombImpulse / totalVesselMass)) ;
+            float atmo = (float)(Math.Pow(((double)this.vessel.atmDensity),0.333))*12;
+            this.aNukeRound.bombImpulse = this.aNukeRound.bombImpulse*((atmo) + 1);
+            this.vessel.ChangeWorldVelocity (this.transform.up * (this.aNukeRound.bombImpulse  / totalVesselMass)) ;
             // float accel = (this.aNukeRound.bombImpulse / totalVesselMass);
 
             // apply force to frame, flimsy rockets shake apart
@@ -542,7 +544,7 @@ namespace USAFOrion
                     // do not damage yourself, your ship is immune from your own nukes
                     if (hitPart.vessel.id != this.pusherOwnerGuid)
                     {
-                        hitPart.skinTemperature += this.aNukeRound.bombHeat ; // add heat
+                        hitPart.skinTemperature += this.aNukeRound.bombHeat * (this.vessel.atmDensity + 0.01)  ; // add heat
                         hitPart.vessel.GoOffRails () ;
                         hit.attachedRigidbody.AddExplosionForce (this.aNukeRound.damageShock,
                                                                  groundZero,
