@@ -47,14 +47,14 @@ namespace USAFOrion
                      // distance between bottom of pusher plate and detonation point in meters, negative number
 
         [KSPField]
-        public float detonationMaxDelay = 1.5f ; // throttle 30% to 0.1%
+        public float detonationMaxDelay = 3.5f ; // throttle 30% to 0.1%
 
         // bomb detonation delay times
         [KSPField]
         public float detonationMinDelay = 0.8f ; // throttle 100% to 60%, should not be less than plateCycleTime
 
         [KSPField]
-        public float detonationStdDelay = 1.15f ; // throttle 60% to 30%
+        public float detonationStdDelay = 1.85f ; // throttle 60% to 30%
 
         public float detonationY ;
                      // distance between vessel center and detonation point, = plateBottomY + detonationDeltaY
@@ -491,9 +491,32 @@ namespace USAFOrion
             var totalVesselMass = 0f ;
             foreach (var current in this.vessel.parts)
                 totalVesselMass += current.mass ;
-            
+
             // add heat from bomb detonation to pusher plate
-            this.skinTemperature += this.aNukeRound.bombHeat * ( 0.01 + this.vessel.atmDensity ) ;
+            var ForwardVel = Vector3.Dot(this.vessel.rb_velocity , this.vessel.upAxis);
+            var heatMultiplier = 0.01 + this.vessel.atmDensity;
+            if (this.vessel.atmDensity > 0.1)
+            {
+                print("Calculated forward velocity to be " + ForwardVel);
+                if (ForwardVel < 10.0)
+                {
+                    var kiloTons = Math.Pow((this.aNukeRound.destroyZone / 230), 3);
+                    var fireballSize = 34.0 * Math.Pow(kiloTons, 0.41);
+                    var fireballTime = 0.2 * Math.Pow(kiloTons, 0.45);
+                    var fireballSpeed = 170.0 / Math.Pow(kiloTons, 0.04);
+                    ForwardVel = ForwardVel + this.aNukeRound.bombImpulse * ((float)(Math.Pow(((double)this.vessel.atmDensity), 0.333)) * 12 + 1) / totalVesselMass;
+                    var timeToFireball = this.detonationY / (fireballSpeed - ForwardVel);
+                    if (timeToFireball < fireballTime)
+                    {
+                        var timeInFireBall = fireballTime - timeToFireball;
+                        var timeOutTheOtherEnd = this.detonationY / (fireballSpeed + ForwardVel);
+                        if (timeOutTheOtherEnd < fireballTime) { timeInFireBall = timeOutTheOtherEnd - timeToFireball; }
+                        heatMultiplier += this.vessel.atmDensity * 4 * timeInFireBall;
+                        print("Cranking the Heat WAY up.");
+                    }
+                }
+            }
+            this.skinTemperature += this.aNukeRound.bombHeat * heatMultiplier;
 
             // FX: make explosion sound
             this.explosionGroup.Power = this.explosionGroupPower ;
