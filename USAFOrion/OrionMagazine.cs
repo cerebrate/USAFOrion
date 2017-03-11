@@ -103,7 +103,7 @@ namespace USAFOrion
                 if (aPart.ClassName == "OrionPusherPlate")
                 {
                     atomicClamp = aPart.gameObject.AddComponent<ConfigurableJoint> () ;
-                    atomicClamp.connectedBody = this.rigidbody ;
+                    atomicClamp.connectedBody = this.GetComponent<Rigidbody>();
 
                     atomicClamp.anchor = new Vector3 (0,
                                                       0,

@@ -16,7 +16,7 @@ namespace USAFOrion
             Light light ;
             Destroy (this.gameObject, this.extinguishDelay) ;
             this.gameObject.AddComponent<Light> () ;
-            light = this.gameObject.light ;
+            light = this.gameObject.GetComponent<Light>();
             light.type = LightType.Point ; // Spot, Directional, or Point
             light.color = Color.white ; // The color of the light.
             light.range = 2000f ; // The range of the light. What does that mean?

@@ -25,7 +25,7 @@ namespace USAFOrion
     public class OrionPusherPlate : Part
     {
         private NukeRound aNukeRound ; // current bomb being detonated
-        private VInfoBox bombCounter ; // HUD of bomb inventory
+        //private VInfoBox bombCounter ; // HUD of bomb inventory
         private Transform bombModel ; // Transform used to alter position of bomb
         private bool bombObstacle ;
         private float bombOffset ; // when bomb animation has finished
@@ -521,8 +521,10 @@ namespace USAFOrion
             // FX: make explosion sound
             this.explosionGroup.Power = this.explosionGroupPower ;
             this.explosionGroup.Burst () ;
-            this.gameObject.audio.pitch = 1f ;
-            this.gameObject.audio.PlayOneShot (this.explosionGroup.sfx) ;
+
+            var audeoSource = this.gameObject.GetComponent<AudioSource>();
+            audeoSource.pitch = 1f;
+            audeoSource.PlayOneShot(this.explosionGroup.sfx);
 
             // FX: make explosion animation
             var groundZero = new Vector3d (this.bombModel.localPosition.x,
@@ -551,7 +553,7 @@ namespace USAFOrion
             // apply force to frame, flimsy rockets shake apart
             // note, do not change this to ForceMode.Impulse , or whatever is on top of the engine will make the jump to lightspeed
             // note, strictly speaking, should not divide by totalVesselMass. But without, rest of vessel blows off like atomic champagne cork
-            this.rigidbody.AddRelativeForce (new Vector3 (0f, (this.aNukeRound.bombImpulse / totalVesselMass), 0f),
+            this.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0f, (this.aNukeRound.bombImpulse / totalVesselMass), 0f),
                                              ForceMode.Force) ;
 
             Collider[] colliders ; // for blast radius and destruction radius filtering
@@ -563,7 +565,7 @@ namespace USAFOrion
             {
                 if (hit.attachedRigidbody != null)
                 {
-                    var hitPart = hit.collider.attachedRigidbody.GetComponent<Part> () ;
+                    var hitPart = hit.GetComponent<Collider>().attachedRigidbody.GetComponent<Part>();
                     // do not damage yourself, your ship is immune from your own nukes
                     if (hitPart.vessel.id != this.pusherOwnerGuid)
                     {
@@ -584,7 +586,7 @@ namespace USAFOrion
             {
                 if (hit.attachedRigidbody != null)
                 {
-                    var hitPart = hit.collider.attachedRigidbody.GetComponent<Part> () ;
+                    var hitPart = hit.GetComponent<Collider>().attachedRigidbody.GetComponent<Part>();
                     // do not damage yourself, your ship is immune from your own nukes
                     if (hitPart.vessel.id != this.pusherOwnerGuid)
                     {
@@ -798,36 +800,36 @@ namespace USAFOrion
         protected override void onPartFixedUpdate ()
         {
             // update HUD of bomb inventory
-            if (this.bombCounter == null)
-            {
-                this.bombCounter = this.stackIcon.DisplayInfo () ;
-                this.bombCounter.SetMsgBgColor (XKCDColors.DarkGreen) ;
-                this.bombCounter.SetMsgTextColor (XKCDColors.ElectricLime) ;
-                this.bombCounter.SetProgressBarBgColor (new Color (0f, 0f, 0f, 0f)) ;
-                this.bombCounter.SetProgressBarColor (new Color (0f, 0f, 0f, 0f)) ;
-            }
-            else
-            {
-                var numBombs = this.nukeManager.effectiveStockpileSize () ;
+//            if (this.bombCounter == null)
+//            {
+//                this.bombCounter = this.stackIcon.DisplayInfo () ;
+//                this.bombCounter.SetMsgBgColor (XKCDColors.DarkGreen) ;
+//                this.bombCounter.SetMsgTextColor (XKCDColors.ElectricLime) ;
+//                this.bombCounter.SetProgressBarBgColor (new Color (0f, 0f, 0f, 0f)) ;
+//                this.bombCounter.SetProgressBarColor (new Color (0f, 0f, 0f, 0f)) ;
+//            }
+//            else
+//            {
+//                var numBombs = this.nukeManager.effectiveStockpileSize () ;
 
-                if (this.lastNumBombs != numBombs)
-                {
-                    this.lastNumBombs = numBombs ;
-                    if (numBombs > 0)
-                    {
-                        this.bombCounter.SetMsgBgColor (XKCDColors.DarkGreen) ;
-                        this.bombCounter.SetMsgTextColor (XKCDColors.ElectricLime) ;
-                    }
-                    else
-                    {
-                        // make HUD indicator red to alert player there are no nukes
-                        this.bombCounter.SetMsgBgColor (XKCDColors.DeepPink) ;
-                        this.bombCounter.SetMsgTextColor (XKCDColors.Yellow) ;
-//					this.stackIcon.SetIconColor(Color.red); TODO
-                    }
-                    this.bombCounter.SetMessage ("Nuke:" + numBombs) ;
-                }
-            }
+//                if (this.lastNumBombs != numBombs)
+//                {
+//                    this.lastNumBombs = numBombs ;
+//                    if (numBombs > 0)
+//                    {
+//                        this.bombCounter.SetMsgBgColor (XKCDColors.DarkGreen) ;
+//                        this.bombCounter.SetMsgTextColor (XKCDColors.ElectricLime) ;
+//                    }
+//                    else
+//                    {
+//                        // make HUD indicator red to alert player there are no nukes
+//                        this.bombCounter.SetMsgBgColor (XKCDColors.DeepPink) ;
+//                        this.bombCounter.SetMsgTextColor (XKCDColors.Yellow) ;
+////					this.stackIcon.SetIconColor(Color.red); TODO
+//                    }
+//                    this.bombCounter.SetMessage ("Nuke:" + numBombs) ;
+//                }
+//            }
 
             // refresh the pop-up menu
             bool hasMagazineValue ;
