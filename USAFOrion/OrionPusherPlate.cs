@@ -24,6 +24,13 @@ namespace USAFOrion
     // Main module for all Orion engines
     public class OrionPusherPlate : Part
     {
+        public OrionPusherPlate()
+            : base()
+        {
+            stagingIcon = "LIQUID_ENGINE";
+            stagingIconAlwaysShown = true;
+        }
+
         private NukeRound aNukeRound ; // current bomb being detonated
         //private VInfoBox bombCounter ; // HUD of bomb inventory
         private Transform bombModel ; // Transform used to alter position of bomb
@@ -65,7 +72,7 @@ namespace USAFOrion
         public string engineModelName = "USAF10MeterOrionEngine2" ; // name of the Unity 3D model
 
         private Transform entireModel ; // Transform used to set position of explosion
-        private FXGroup explosionGroup ; // explosion special effect  
+        private FXGroup explosionGroup ; // explosion special effect
 
         [KSPField]
         public float explosionGroupPower = 10f ; // power setting for FXGroup of bomb blast
@@ -100,13 +107,13 @@ namespace USAFOrion
 
         [KSPField]
         public float plateOffsetExtended = 0.4f ;
-                     // distance pusher plate moves downward below neutral point when recoiling 
+                     // distance pusher plate moves downward below neutral point when recoiling
 
         [KSPField]
         public float plateTopY = -4.4447f ; // distance between vessel center and top of pusher plate, negative number
 
         private MoveState pusherMoveState = MoveState.Motionless ;
-                          // what part of a pusher cycle the animiation is currently in	
+                          // what part of a pusher cycle the animiation is currently in
 
         private Guid pusherOwnerGuid ; // id of vessel this plate is part of. Use to prevent bombs from affecting self
         private Transform pusherPlate ; // Transform used to alter position of pusher plate
@@ -159,7 +166,7 @@ namespace USAFOrion
         // When Neutral is reached, the plate continues moving downward plateOffsetExtended meters. (Segment 4, MoveState.NeutralToExtend)
         // At maximum downward offset, plate reverses direction and moves upwards to Neutral postion. (Segment 5, MoveState.ExtendToNeutral)
         // When Neutral postion is reached, that is the end of the animation.
-        // 
+        //
         // The entire animation takes plateCycleTime seconds.
         // The duration is divided up among the five segments of the animation. The amount of duration alloted to each
         // segment is proportional to the distance the plate travels in that segment. In other words, the plate's
@@ -169,7 +176,7 @@ namespace USAFOrion
         // Yes, in reality bomb will have a velocity different from the plate speed, but the difference is not worth the
         // headache of calculating the deltas. The USAF 10 meter Orion had a bomb speed of 90 m/s, with detonations every 0.8 sec to every 1.5 sec.
         //
-        // The segment of the animation currently being performed is stored in pusherMoveState. 
+        // The segment of the animation currently being performed is stored in pusherMoveState.
         // If this is equal to MoveState.Motionless, there is no animation underway.
 
         //=======
@@ -276,7 +283,7 @@ namespace USAFOrion
 //			this.plasmaPlume.particleEmitter.minSize = 0.5f;
 //			this.plasmaPlume.particleEmitter.maxSize = 1f;
 //			// plume time = segment duration / 4, with 4 being somewhat arbitrary
-//			this.plasmaPlume.particleEmitter.maxEnergy = (this.plateCycleTime / 5f); 
+//			this.plasmaPlume.particleEmitter.maxEnergy = (this.plateCycleTime / 5f);
 //			this.plasmaPlume.particleEmitter.minEnergy = this.plasmaPlume.particleEmitter.maxEnergy * 0.95f;
 //			//  plasma velocity = R=D/T = 23 / 0.04 = 575 m/s
 //			//  plasma velocity = R=D/T = 23 / 0.16 = 143.75 m/s
@@ -358,7 +365,7 @@ namespace USAFOrion
             base.onFlightStart () ;
         }
 
-//		private void DepthFirstParts(Part p) 
+//		private void DepthFirstParts(Part p)
 //		{
 //			if (p.children != null || p.children.Count != 0) {
 //				foreach (Part q in p.children) {
@@ -371,15 +378,15 @@ namespace USAFOrion
 //						this.maxDockedShipID++;
 //						this.dockedShipID = this.maxDockedShipID;
 //					}
-//					
+//
 //					Debug.Log(">>> Ship #" + this.dockedShipID.ToString() + ": " + q.name);
 //					foreach (Component aComponent in q.gameObject.GetComponents<Component>()) {
 //						Debug.Log(">>> Ship #" + this.dockedShipID.ToString() + ": " + q.name + ": " + aComponent.GetType());
 //					}
-//					
+//
 //					// DEAL WITH PART q's CHILDREN
 //					DepthFirstParts(q);	// recursion
-//					
+//
 //					if (q.Modules.Contains("ModuleDockingNode") && p.Modules.Contains("ModuleDockingNode")) {
 //						// End of branch that is a docked ship: revert back to parent
 //						this.dockedShipID = dockedShipIDStack.Pop();
