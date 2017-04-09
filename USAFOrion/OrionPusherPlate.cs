@@ -135,8 +135,8 @@ namespace USAFOrion
                                                     // list of deactivate events for bomb filter pop-ups
 
         private readonly Dictionary<String, String> magazineTitles = new Dictionary<String, String> () ;
-        private readonly int maxActionSlots = 19 ; // must match number of activate/deactivate KSPActions
-        private readonly int maxEventSlots = 19 ; // must match number of activate/deactivate KSPEvents
+        private readonly int maxActionSlots = 26 ; // must match number of activate/deactivate KSPActions
+        private readonly int maxEventSlots = 26 ; // must match number of activate/deactivate KSPEvents
 
         private readonly List<Transform> pushAnimationTransforms = new List<Transform> () ;
                                          // parts attached to pusher plate, are animated with the plate
@@ -511,7 +511,7 @@ namespace USAFOrion
                     var fireballSize = 34.0 * Math.Pow(kiloTons, 0.41);
                     var fireballTime = 0.2 * Math.Pow(kiloTons, 0.45);
                     var fireballSpeed = 170.0 / Math.Pow(kiloTons, 0.04);
-                    ForwardVel = ForwardVel + this.aNukeRound.bombImpulse * ((float)(Math.Pow(((double)this.vessel.atmDensity), 0.333)) * 12 + 1) / totalVesselMass;
+                    ForwardVel = ForwardVel + this.aNukeRound.bombImpulse * ((float)((Math.Pow((double)this.vessel.atmDensity, 0.666)) * 8.0 * (Math.Pow(kiloTons,0.333))) + 1) / totalVesselMass;
                     var timeToFireball = this.detonationY / (fireballSpeed - ForwardVel);
                     if (timeToFireball < fireballTime)
                     {
@@ -519,7 +519,7 @@ namespace USAFOrion
                         var timeOutTheOtherEnd = this.detonationY / (fireballSpeed + ForwardVel);
                         if (timeOutTheOtherEnd < fireballTime) { timeInFireBall = timeOutTheOtherEnd - timeToFireball; }
                         heatMultiplier += this.vessel.atmDensity * 4 * timeInFireBall;
-                        print("Cranking the Heat WAY up.");
+                        print("Travelling through your own fireball: Cranking the Heat WAY up.");
                     }
                 }
             }
@@ -552,7 +552,8 @@ namespace USAFOrion
             //			Debug.Log(">>> OrionPusherPlate.detonateBomb: plasma plume started at " + Time.time.ToString());
 
             // add velocity
-            float atmo = (float)(Math.Pow(((double)this.vessel.atmDensity),0.333))*12;
+            var kiloT = Math.Pow((this.aNukeRound.destroyZone / 230), 3);
+            float atmo = ((float)((Math.Pow((double)this.vessel.atmDensity, 0.666)) * 8.0 * (Math.Pow(kiloT, 0.333))) );
             this.aNukeRound.bombImpulse = this.aNukeRound.bombImpulse*((atmo) + 1);
             this.vessel.ChangeWorldVelocity (this.transform.up * (this.aNukeRound.bombImpulse  / totalVesselMass)) ;
             // float accel = (this.aNukeRound.bombImpulse / totalVesselMass);
@@ -1122,6 +1123,97 @@ namespace USAFOrion
                 this.Deactivate_Magazine_18();
         }
 
+        [KSPAction("start magazine 19", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag19(KSPActionParam param)
+        {
+            if (this.maxMagazine > 19)
+                this.Activate_Magazine_19();
+        }
+        [KSPAction("kill magazine 19", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag19(KSPActionParam param)
+        {
+            if (this.maxMagazine > 19)
+                this.Deactivate_Magazine_19();
+        }
+        [KSPAction("start magazine 20", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag20(KSPActionParam param)
+        {
+            if (this.maxMagazine > 20)
+                this.Activate_Magazine_20();
+        }
+        [KSPAction("kill magazine 20", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag20(KSPActionParam param)
+        {
+            if (this.maxMagazine > 20)
+                this.Deactivate_Magazine_20();
+        }
+        [KSPAction("start magazine 21", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag21(KSPActionParam param)
+        {
+            if (this.maxMagazine > 21)
+                this.Activate_Magazine_21();
+        }
+        [KSPAction("kill magazine 21", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag21(KSPActionParam param)
+        {
+            if (this.maxMagazine > 21)
+                this.Deactivate_Magazine_21();
+        }
+        [KSPAction("start magazine 22", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag22(KSPActionParam param)
+        {
+            if (this.maxMagazine > 22)
+                this.Activate_Magazine_22();
+        }
+        [KSPAction("kill magazine 22", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag22(KSPActionParam param)
+        {
+            if (this.maxMagazine > 22)
+                this.Deactivate_Magazine_22();
+        }
+        [KSPAction("start magazine 23", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag23(KSPActionParam param)
+        {
+            if (this.maxMagazine > 23)
+                this.Activate_Magazine_23();
+        }
+        [KSPAction("kill magazine 23", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag23(KSPActionParam param)
+        {
+            if (this.maxMagazine > 23)
+                this.Deactivate_Magazine_23();
+        }
+        [KSPAction("start magazine 24", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag24(KSPActionParam param)
+        {
+            if (this.maxMagazine > 24)
+                this.Activate_Magazine_24();
+        }
+        [KSPAction("kill magazine 24", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag24(KSPActionParam param)
+        {
+            if (this.maxMagazine > 24)
+                this.Deactivate_Magazine_24();
+        }
+        [KSPAction("start magazine 25", actionGroup = KSPActionGroup.None)]
+        public void ActionGroupActivateMag25(KSPActionParam param)
+        {
+            if (this.maxMagazine > 25)
+                this.Activate_Magazine_25();
+        }
+        [KSPAction("kill magazine 25", KSPActionGroup.None)]
+        public void ActionGroupDeactivateMag25(KSPActionParam param)
+        {
+            if (this.maxMagazine > 25)
+                this.Deactivate_Magazine_25();
+        }
+
+
+
+
+
+
+
         // === EVENTS ===
 
         // empty dynamic slots for the various magazine types. All start out invisible
@@ -1353,6 +1445,91 @@ namespace USAFOrion
         {
             this.deactivateBombEvent("Activate_Magazine_18", "Deactivate_Magazine_18", this.magazineKeys[18]);
         }
+
+        [KSPEvent(active = false, guiName = "19 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_19()
+        {
+            this.activateBombEvent("Activate_Magazine_19", "Deactivate_Magazine_19", this.magazineKeys[19]);
+        }
+
+        [KSPEvent(active = false, guiName = "19 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_19()
+        {
+            this.deactivateBombEvent("Activate_Magazine_19", "Deactivate_Magazine_19", this.magazineKeys[19]);
+        }
+
+        [KSPEvent(active = false, guiName = "20 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_20()
+        {
+            this.activateBombEvent("Activate_Magazine_20", "Deactivate_Magazine_20", this.magazineKeys[20]);
+        }
+
+        [KSPEvent(active = false, guiName = "20 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_20()
+        {
+            this.deactivateBombEvent("Activate_Magazine_20", "Deactivate_Magazine_20", this.magazineKeys[20]);
+        }
+
+        [KSPEvent(active = false, guiName = "21 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_21()
+        {
+            this.activateBombEvent("Activate_Magazine_21", "Deactivate_Magazine_21", this.magazineKeys[21]);
+        }
+
+        [KSPEvent(active = false, guiName = "21 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_21()
+        {
+            this.deactivateBombEvent("Activate_Magazine_21", "Deactivate_Magazine_21", this.magazineKeys[21]);
+        }
+
+        [KSPEvent(active = false, guiName = "22 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_22()
+        {
+            this.activateBombEvent("Activate_Magazine_22", "Deactivate_Magazine_22", this.magazineKeys[22]);
+        }
+
+        [KSPEvent(active = false, guiName = "22 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_22()
+        {
+            this.deactivateBombEvent("Activate_Magazine_22", "Deactivate_Magazine_22", this.magazineKeys[22]);
+        }
+
+        [KSPEvent(active = false, guiName = "23 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_23()
+        {
+            this.activateBombEvent("Activate_Magazine_23", "Deactivate_Magazine_23", this.magazineKeys[23]);
+        }
+
+        [KSPEvent(active = false, guiName = "23 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_23()
+        {
+            this.deactivateBombEvent("Activate_Magazine_23", "Deactivate_Magazine_23", this.magazineKeys[23]);
+        }
+
+        [KSPEvent(active = false, guiName = "24 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_24()
+        {
+            this.activateBombEvent("Activate_Magazine_24", "Deactivate_Magazine_24", this.magazineKeys[24]);
+        }
+
+        [KSPEvent(active = false, guiName = "24 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_24()
+        {
+            this.deactivateBombEvent("Activate_Magazine_24", "Deactivate_Magazine_24", this.magazineKeys[24]);
+        }
+
+        [KSPEvent(active = false, guiName = "25 off  (Start->)", guiActive = false, category = "Thrust Control")]
+        public void Activate_Magazine_25()
+        {
+            this.activateBombEvent("Activate_Magazine_25", "Deactivate_Magazine_25", this.magazineKeys[25]);
+        }
+
+        [KSPEvent(active = false, guiName = "25 feeding  (Kill->)", guiActive = false, category = "Thrust Control")]
+        public void Deactivate_Magazine_25()
+        {
+            this.deactivateBombEvent("Activate_Magazine_25", "Deactivate_Magazine_25", this.magazineKeys[25]);
+        }
+
 
         private void activateBombEvent (string activateFunctionName, string deactivateFunctionName, string filterKey)
         {
