@@ -502,7 +502,7 @@ namespace USAFOrion
             // add heat from bomb detonation to pusher plate
             var ForwardVel = Vector3.Dot(this.vessel.rb_velocity , this.vessel.upAxis);
             var heatMultiplier = 0.01 + this.vessel.atmDensity;
-            if (this.vessel.atmDensity > 0.1)
+            if (this.vessel.atmDensity > 3.1)
             {
                 print("Calculated forward velocity to be " + ForwardVel);
                 if (ForwardVel < 10.0)
@@ -511,7 +511,7 @@ namespace USAFOrion
                     var fireballSize = 34.0 * Math.Pow(kiloTons, 0.41);
                     var fireballTime = 0.2 * Math.Pow(kiloTons, 0.45);
                     var fireballSpeed = 170.0 / Math.Pow(kiloTons, 0.04);
-                    ForwardVel = ForwardVel + this.aNukeRound.bombImpulse * ((float)((Math.Pow((double)this.vessel.atmDensity, 0.666)) * 8.0 * (Math.Pow(kiloTons,0.333))) + 1) / totalVesselMass;
+                    ForwardVel = ForwardVel + this.aNukeRound.bombImpulse * ((float)((Math.Pow((double)this.vessel.atmDensity, 0.666)) * 12.0 ) + 1) / totalVesselMass;
                     var timeToFireball = this.detonationY / (fireballSpeed - ForwardVel);
                     if (timeToFireball < fireballTime)
                     {
@@ -552,19 +552,41 @@ namespace USAFOrion
             //			Debug.Log(">>> OrionPusherPlate.detonateBomb: plasma plume started at " + Time.time.ToString());
 
             // add velocity
-            var kiloT = Math.Pow((this.aNukeRound.destroyZone / 230), 3);
-            float atmo = ((float)((Math.Pow((double)this.vessel.atmDensity, 0.666)) * 8.0 * (Math.Pow(kiloT, 0.333))) );
+            
+            float atmo = ((float)((Math.Pow((double)this.vessel.atmDensity, 0.666)) * 12.0 ) );
+            // print("current atmo boost is " + Convert.ToString(atmo));
             this.aNukeRound.bombImpulse = this.aNukeRound.bombImpulse*((atmo) + 1);
             this.vessel.ChangeWorldVelocity (this.transform.up * (this.aNukeRound.bombImpulse  / totalVesselMass)) ;
             // float accel = (this.aNukeRound.bombImpulse / totalVesselMass);
-
+            
             // apply force to frame, flimsy rockets shake apart
             // note, do not change this to ForceMode.Impulse , or whatever is on top of the engine will make the jump to lightspeed
             // note, strictly speaking, should not divide by totalVesselMass. But without, rest of vessel blows off like atomic champagne cork
+            // TD Note: Yes, you should divide by total vessel mass.  Full impulse is delivered to the vessel, not each part individually
             this.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0f, (this.aNukeRound.bombImpulse / totalVesselMass), 0f),
                                              ForceMode.Force) ;
 
             Collider[] colliders ; // for blast radius and destruction radius filtering
+
+            // destroy any object within destruction radius, unless they are part of this ship
+            // sparing anything more massive than 100 tons. Do not destroy asteroids like Roche.
+            colliders = Physics.OverlapSphere(groundZero, this.aNukeRound.destroyZone);
+            foreach (var hit in colliders)
+            {
+                if (hit.attachedRigidbody != null)
+                {
+                    var hitPart = hit.GetComponent<Collider>().attachedRigidbody.GetComponent<Part>();
+                    // do not damage yourself, your ship is immune from your own nukes
+                    if (hitPart.vessel.id != this.pusherOwnerGuid)
+                    {
+                        if (hitPart.mass < this.aNukeRound.destroyMass)
+                        {
+                            // spare any part over destroyMass tons, like asteroids
+                            hitPart.explode(); // destroy everything else
+                        }
+                    }
+                }
+            }
 
             // shake up any object within blast radius, unless they are part of this ship
             // Also add heat
@@ -577,7 +599,7 @@ namespace USAFOrion
                     // do not damage yourself, your ship is immune from your own nukes
                     if (hitPart.vessel.id != this.pusherOwnerGuid)
                     {
-                        hitPart.skinTemperature += this.aNukeRound.bombHeat * (this.vessel.atmDensity + 0.01)  ; // add heat
+                        hitPart.skinTemperature += this.aNukeRound.bombHeat * (this.vessel.atmDensity * 10.0 + 1.0)  ; // add heat
                         hitPart.vessel.GoOffRails () ;
                         hit.attachedRigidbody.AddExplosionForce (this.aNukeRound.damageShock,
                                                                  groundZero,
@@ -587,25 +609,7 @@ namespace USAFOrion
                 }
             }
 
-            // destroy any object within destruction radius, unless they are part of this ship
-            // sparing anything more massive than 100 tons. Do not destroy asteroids like Roche.
-            colliders = Physics.OverlapSphere (groundZero, this.aNukeRound.destroyZone) ;
-            foreach (var hit in colliders)
-            {
-                if (hit.attachedRigidbody != null)
-                {
-                    var hitPart = hit.GetComponent<Collider>().attachedRigidbody.GetComponent<Part>();
-                    // do not damage yourself, your ship is immune from your own nukes
-                    if (hitPart.vessel.id != this.pusherOwnerGuid)
-                    {
-                        if (hitPart.mass < this.aNukeRound.destroyMass)
-                        {
-                            // spare any part over destroyMass tons, like asteroids
-                            hitPart.explode () ; // destroy everything else
-                        }
-                    }
-                }
-            }
+
         }
 
         //=======
@@ -677,11 +681,14 @@ namespace USAFOrion
         // =======
         protected void doPlateAnimation ()
         {
-//			if (this.plasmaPlume.particleEmitter.emit == true && Time.time >= this.plasmaPlumeStopTime) {
-//				this.plasmaPlume.particleEmitter.emit = false;
-//				Debug.Log(">>> OrionPusherPlate.doPlateAnimation: plasma plume stopped at " + Time.time.ToString());
-//			}
+            //			if (this.plasmaPlume.particleEmitter.emit == true && Time.time >= this.plasmaPlumeStopTime) {
+            //				this.plasmaPlume.particleEmitter.emit = false;
+            //				Debug.Log(">>> OrionPusherPlate.doPlateAnimation: plasma plume stopped at " + Time.time.ToString());
+            //			}
 
+            // for data collection
+            //var ForwardVel = Vector3.Dot(this.vessel.rb_velocity, this.vessel.upAxis);
+            //print(this.vessel.missionTime + ", "+this.pusherMoveState + ", " + this.vessel.geeForce + ","+this.vessel.geeForce_immediate + ", "+ ForwardVel);
 
             if (this.pusherMoveState == MoveState.Motionless)
                 return ; // no animation in progress
